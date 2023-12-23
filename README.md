@@ -23,7 +23,7 @@ Maybe you expected a rich cli, but nah. I mean why should u even bother learning
 
  ### Cloning the GitHub Repository
 
-  1. **Clone the Repository:**:
+  1. **Clone the Repository:**
 
       ```bash
       git clone https://github.com/ValdonVitija/crap.git
@@ -45,7 +45,7 @@ Maybe you expected a rich cli, but nah. I mean why should u even bother learning
 
 ### Step 1 
 ```bash
-(venv) root@user:~/my_app> crap
+(venv) root@user:~/my_app> crap project_dir
 ```
 
 ### Step 2
