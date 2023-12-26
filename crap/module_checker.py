@@ -45,33 +45,6 @@ class ImportsVisitor(ast.NodeVisitor):
         self.imported_modules.add(node.module)
 
 
-@lru_cache
-def get_current_packages_as_json():
-    """ """
-    process = subprocess.run(["pipdeptree", "--json"], capture_output=True, text=True)
-    json_output = json.loads(process.stdout)
-    return json_output
-
-
-@lru_cache
-def get_installed_packages_as_list():
-    """ """
-    process = subprocess.run(["pipdeptree", "--json"], capture_output=True, text=True)
-    json_output = json.loads(process.stdout)
-    return [pack["package"]["package_name"] for pack in json_output]
-
-@lru_cache
-def get_package_counter_dict():
-    """ """
-    process = subprocess.run(["pipdeptree", "--json"], capture_output=True, text=True)
-    json_output = json.loads(process.stdout)
-    new_json = {}
-
-    for item in json_output:
-        package_name = item['package']['package_name']
-        new_json[package_name] = 0
-
-    return new_json
 
 
 

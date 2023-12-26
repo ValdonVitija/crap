@@ -6,10 +6,14 @@ import shutil
 from typing import List, Tuple, Set
 import pathlib
 
-from module_checker import (
+from crap.subprocesses import (
     get_installed_packages_as_list,
-    ImportsVisitor,
     get_package_counter_dict,
+    freeze_into_requirements_txt,
+    reinstall_dependencies_from_requirements_txt,
+)
+from module_checker import (
+    ImportsVisitor,
 )
 
 
@@ -30,6 +34,10 @@ class CrapManager:
             self._check_file(self.path_)
         elif self.path_.is_dir():
             self._check_directory()
+
+        self.remove_unused_packages()
+        freeze_into_requirements_txt()
+        reinstall_dependencies_from_requirements_txt()
 
     def _check_file(self, file_path: pathlib.Path) -> None:
         print(file_path)
@@ -91,8 +99,15 @@ class CrapManager:
             print(f"Removed unused package: {package}")
 
 
+        
+
+
+
+
+
+
 # manager = CrapManager(path_="/root/open_source/crap/crap/cli.py")
 manager = CrapManager(path_=".")
 manager.run()
-# print(manager.get_unused_packages())
-manager.remove_unused_packages()
+print(manager.get_unused_packages())
+# manager.remove_unused_packages()
