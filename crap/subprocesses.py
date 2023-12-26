@@ -48,13 +48,19 @@ def freeze_into_requirements_txt():
         print(ex)
 
 
-@lru_cache
 def reinstall_dependencies_from_requirements_txt():
     """
     Reinstall dependencies from requirements.txt
     """
     try:
-        subprocess.run(["pip3", "install", "-r", "requirements.txt"])
+        subprocess.run(["pip3", "install", "-r", "requirements.txt","--no-cache-dir"])
         print("Reinstalled dependencies from requirements.txt")
     except Exception as ex:
         print(ex)
+
+def uninstall_package(package):
+    """
+    Uninstall package
+    """
+    subprocess.run(["pip3", "uninstall", "-y", package])
+    print(f"Removed unused package: {package}")

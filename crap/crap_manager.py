@@ -5,13 +5,17 @@ import os
 import shutil
 from typing import List, Tuple, Set
 import pathlib
+import numpy
 
-from crap.subprocesses import (
+# from crap.subprocesses import (
+from subprocesses import (
     get_installed_packages_as_list,
     get_package_counter_dict,
     freeze_into_requirements_txt,
     reinstall_dependencies_from_requirements_txt,
+    uninstall_package
 )
+# from crap.module_checker import (
 from module_checker import (
     ImportsVisitor,
 )
@@ -95,9 +99,7 @@ class CrapManager:
     def remove_unused_packages(self):
         unused_packages = self.get_unused_packages()
         for package in unused_packages:
-            subprocess.run(["pip3", "uninstall", "-y", package])
-            print(f"Removed unused package: {package}")
-
+            uninstall_package(package)
 
         
 
@@ -105,9 +107,7 @@ class CrapManager:
 
 
 
-
-# manager = CrapManager(path_="/root/open_source/crap/crap/cli.py")
-manager = CrapManager(path_=".")
+manager = CrapManager(path_="/root/open_source/crap/crap/cli.py")
 manager.run()
-print(manager.get_unused_packages())
+# print(manager.get_unused_packages())
 # manager.remove_unused_packages()
