@@ -17,3 +17,4 @@ pre-commit
 twine
 pipenv
 poetry
+typer

@@ -2,6 +2,7 @@ import subprocess
 import json
 from functools import lru_cache
 from typing import List, Dict
+import pathlib
 
 
 @lru_cache
@@ -29,10 +30,10 @@ def execute_command_without_output(command: list[str]):
 def get_installed_packages() -> List[str]:
     """Get a list of installed packages."""
     json_output = get_json_output()
+
     return [pack["package"]["package_name"] for pack in json_output]
 
 
-@lru_cache
 def get_package_counter_dict() -> Dict[str, int]:
     """Get a dictionary of package usage counters."""
     json_output = get_json_output()
@@ -41,13 +42,19 @@ def get_package_counter_dict() -> Dict[str, int]:
 
 def freeze_into_requirements():
     """Freeze current environment to requirements.txt."""
-    execute_command_without_output(["pip3", "freeze", "> requirements.txt"])
+    req_path = pathlib.Path(__file__).parent / "data" / "req.txt"
+    try:
+        with open(req_path, "w") as file_:
+            subprocess.run(["pip3", "freeze"], stdout=file_)
+    except Exception as ex:
+        print(ex)
 
 
-def reinstall_from_requirements():
+def reinstall_from_requirements() -> None:
     """Reinstall packages from requirements.txt."""
+    req_path = pathlib.Path(__file__).parent / "data" / "req.txt"
     execute_command_without_output(
-        ["pip3", "install", "-r", "requirements.txt", "--no-cache-dir"]
+        ["pip3", "install", "-r", req_path, "--no-cache-dir"]
     )
 
 
@@ -61,3 +68,4 @@ def pre_cleanup_with_ruff(path_):
     Pre cleanup with ruff
     """
     execute_command_without_output(["ruff", "check", path_, "--fix"])
+

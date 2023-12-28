@@ -1,8 +1,6 @@
 from functools import lru_cache
 from typing import List
 import typer
-import shutil
-import pathlib
 from typing_extensions import Annotated, Optional
 from crap.crap_manager import CrapManager
 from crap.package_management import PackageManagement

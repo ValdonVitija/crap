@@ -21,7 +21,7 @@ class PackageManagement:
             existing_packages = {line.strip() for line in file}
             if package not in existing_packages:
                 file.write(package + "\n")
-                print(f"Added '{package}' to important packages")
+                print(f"✅ Added '{package}' to important packages")
             else:
                 print(f"'{package}' is already listed as an important package")
 
@@ -61,7 +61,7 @@ class PackageManagement:
                     file.write(line)
 
             if package in (line.strip() for line in lines):
-                print(f"Removed '{package}' from important packages")
+                print(f"❌ Removed '{package}' from important packages")
             else:
                 print(f"'{package}' was not found in important packages")
 
@@ -87,6 +87,6 @@ class PackageManagement:
 
         try:
             shutil.copyfile(default_packages_path, self.filepath)
-            print("Reset important packages to default")
+            print("🔄 Reset important packages to default")
         except FileNotFoundError:
             print(f"Default packages file '{DEFAULT_PACKAGES_FILE}' not found")
