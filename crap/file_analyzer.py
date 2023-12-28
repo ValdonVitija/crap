@@ -8,6 +8,9 @@ class PythonFileAnalyzer:
         self.imported_modules = set()
 
     def analyze(self):
+        """
+        Analyzes the Python file and extracts the imported modules.
+        """
         code = self.file_path.read_text()
         tree = ast.parse(code)
         visitor = ImportsVisitor()

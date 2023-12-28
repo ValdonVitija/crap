@@ -73,7 +73,15 @@ def crap(
 
 
 def add_important_package(package: str, filename="important_packages.txt"):
-    with open(f"{pathlib.Path(__file__).parent}/data/{filename}", "r+") as file:
+    """
+    Add a package to the list of important packages.
+
+    Args:
+        package (str): The name of the package to add.
+        filename (str, optional): The name of the file to store the list of important packages. 
+            Defaults to "important_packages.txt".
+    """
+    with open(f"{pathlib.Path(__file__).parent}/data/{filename}", "r+", encoding="utf-8") as file:
         existing_packages = {line.strip() for line in file}
         if package not in existing_packages:
             file.write(package + "\n")
@@ -83,7 +91,18 @@ def add_important_package(package: str, filename="important_packages.txt"):
 
 
 def show_important_packages(filename="important_packages.txt") -> List[str]:
-    with open(f"{pathlib.Path(__file__).parent}/data/{filename}", "r") as file:
+    """
+    Display the list of important packages.
+
+    Args:
+        filename (str): The name of the file containing the list of important packages.
+            Default is "important_packages.txt".
+
+    Returns:
+        List[str]: The list of important packages.
+
+    """
+    with open(f"{pathlib.Path(__file__).parent}/data/{filename}", "r", encoding="utf-8") as file:
         important_packages = [line.strip() for line in file]
         print("📦 Important packages:")
         for package in important_packages:
@@ -91,8 +110,16 @@ def show_important_packages(filename="important_packages.txt") -> List[str]:
 
 
 def remove_important_package(package: str, filename="important_packages.txt"):
+    """
+    Removes a package from the list of important packages.
+
+    Args:
+        package (str): The name of the package to be removed.
+        filename (str, optional): The name of the file containing the list of important packages.
+            Defaults to "important_packages.txt".
+    """
     filepath = f"{pathlib.Path(__file__).parent}/data/{filename}"
-    with open(filepath, "r+") as file:
+    with open(filepath, "r+", encoding="utf-8") as file:
         lines = file.readlines()
         file.seek(0)
         file.truncate(0)
@@ -106,7 +133,14 @@ def remove_important_package(package: str, filename="important_packages.txt"):
             print(f"'{package}' was not found in important packages")
 
 
+
 def flush_important_packages(filename="important_packages.txt"):
+    """
+    Flushes the important packages by removing the contents of the specified file.
+
+    Args:
+        filename (str, optional): The name of the file to flush. Defaults to "important_packages.txt".
+    """
     filepath = f"{pathlib.Path(__file__).parent}/data/{filename}"
     with open(filepath, "w"):
         pass
