@@ -1,8 +1,5 @@
 import ast
-import json
-from functools import lru_cache
-import subprocess
-from typing import Set, Any, Tuple
+from typing import Any, Tuple
 
 
 class ImportsVisitor(ast.NodeVisitor):

@@ -1,5 +1,4 @@
 import ast
-from typing import Any, Set
 import pathlib
 from crap.module_checker import ImportsVisitor
 

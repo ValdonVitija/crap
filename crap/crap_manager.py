@@ -158,8 +158,7 @@
 
 
 import os
-import shutil
-from typing import List, Tuple, Set
+from typing import Set
 import pathlib
 from crap.file_analyzer import PythonFileAnalyzer
 from crap.virtual_env_checker import VirtualEnvChecker
@@ -169,6 +168,7 @@ from crap.subprocesses import (
     uninstall_package,
     pre_cleanup_with_ruff,
     reinstall_from_requirements,
+    freeze_into_requirements
 )
 
 
@@ -186,6 +186,13 @@ class CrapManager:
 
         self._process_path()
         self._cleanup_packages()
+        """
+        After we cleanup remove the unused packages, we need to freeze the current environment to requirements.txt.
+        The left packages in requirements.txt are the ones that are actually used by the project. These packages might have dependecies
+        that we have deleted since they haven't directly been used by the project. So we need to reinstall the packages from requirements.txt.
+        When using pip to install packages, any dependecy gets installed automatically. So we don't need to worry about that.
+        """
+        freeze_into_requirements()
         reinstall_from_requirements()
 
     def _process_path(self):
@@ -202,19 +209,11 @@ class CrapManager:
             if package in analyzer.imported_modules:
                 self.package_usage_counter.increment_package_count(package)
 
-    # def _analyze_directory(self):
-    #     for dirpath, dirnames, filenames in os.walk(self.path_):
-    #         dirnames[:] = [d for d in dirnames if not self.venv_checker.is_likely_venv(os.path.join(dirpath, d))]
-    #         for filename in filenames:
-    #             if filename.endswith(".py"):
-    #                 file_path = pathlib.Path(dirpath) / filename
-    #                 self._analyze_file(file_path)
 
     def _analyze_directory(self):
         excluded_dirs = self._get_excluded_dirs()
 
         for dirpath, dirnames, filenames in os.walk(self.path_):
-            # Filter out directories that are virtual environments or in the excluded list
             dirnames[:] = [
                 d
                 for d in dirnames
@@ -237,27 +236,8 @@ class CrapManager:
 
     @staticmethod
     def _get_important_packages() -> Set[str]:
-        return {
-            "just-crap",
-            "pipdeptree",
-            "pip",
-            "ruff",
-            "setuptools",
-            "black",
-            "flake8",
-            "pylint",
-            "mypy",
-            "isort",
-            "pytest",
-            "wheel",
-            "coverage",
-            "tox",
-            "bandit",
-            "pre-commit",
-            "twine",
-            "pipenv",
-            "poetry",
-        }
+        with open(f"{pathlib.Path(__file__).parent}/data/important_packages.txt", "r") as file:
+            return {line.strip() for line in file}
 
     @staticmethod
     def _get_excluded_dirs() -> Set[str]:

@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List
 from crap.subprocesses import get_package_counter_dict
 
 
