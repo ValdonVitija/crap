@@ -90,7 +90,7 @@ class CrapManager:
     @staticmethod
     def _get_important_packages() -> Set[str]:
         """
-        Retrieves the important packages from the important_packages.txt file. 
+        Retrieves the important packages from the important_packages.txt file.
         These packages cannot be removed, because they are most likely dev tools that do not
         get imported in the code.
 
@@ -98,7 +98,9 @@ class CrapManager:
             A set of strings representing the important packages.
         """
         with open(
-            f"{pathlib.Path(__file__).parent}/data/important_packages.txt", "r", encoding="utf-8"
+            f"{pathlib.Path(__file__).parent}/data/important_packages.txt",
+            "r",
+            encoding="utf-8",
         ) as file:
             return {line.strip() for line in file}
 
