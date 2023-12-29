@@ -1,5 +1,6 @@
 import os
 from typing import Set
+from tqdm import tqdm 
 import pathlib
 from crap.file_analyzer import PythonFileAnalyzer
 from crap.virtual_env_checker import VirtualEnvChecker
@@ -26,21 +27,29 @@ class CrapManager:
         if not self.path_.exists():
             raise FileNotFoundError("File/Dir not found")
 
-        self._process_path()
-        initial_packages = get_current_packages()
-        self._cleanup_packages()
-        # After we cleanup remove the unused packages, we need to freeze the current environment to requirements.txt.
-        # The left packages in requirements.txt are the ones that are actually used by the project. These packages might have dependecies
-        # that we have deleted since they haven't directly been used by the project. So we need to reinstall the packages from requirements.txt.
-        # When using pip to install packages, any dependecy gets installed automatically. So we don't need to worry about that.
-        freeze_into_requirements()
-        reinstall_from_requirements()
+        total_steps = 4  
+        bar_width = 100  
+        bar_color = 'red'  
 
-        final_packages = get_current_packages()
-        self.deleted_packages = initial_packages - final_packages
+        with tqdm(total=total_steps, ncols=bar_width, colour=bar_color) as pbar:
+            self._process_path()
+            pbar.update(1)  
 
+            initial_packages = get_current_packages()
+            pbar.update(1) 
+
+            self._cleanup_packages()
+            pbar.update(1)  
+
+            freeze_into_requirements()
+            reinstall_from_requirements()
+            pbar.update(1)  
+
+            final_packages = get_current_packages()
+            self.deleted_packages = initial_packages - final_packages
+
+        print()
         self.print_deleted_packages()
-        
 
     def _process_path(self):
         if self.path_.is_file():

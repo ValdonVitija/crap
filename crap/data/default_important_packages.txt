@@ -18,3 +18,4 @@ twine
 pipenv
 poetry
 typer
+tqdm
