@@ -5,11 +5,12 @@ from typing import List, Dict
 import pathlib
 
 
-@lru_cache
-def get_json_output():
-    process = subprocess.run(["pipdeptree", "--json"], capture_output=True, text=True)
-    json_output = json.loads(process.stdout)
-    return json_output
+def get_current_packages() -> set:
+    """Get the current packages installed in the environment."""
+    process = subprocess.run(["pip3", "freeze"], capture_output=True, text=True)
+    output = process.stdout.strip()
+    packages = set(line.split("==")[0] for line in output.split("\n"))
+    return packages
 
 
 def run_subprocess(command: list[str]) -> subprocess.CompletedProcess:
@@ -26,18 +27,10 @@ def execute_command_without_output(command: list[str]):
     run_subprocess(command)
 
 
-@lru_cache
-def get_installed_packages() -> List[str]:
-    """Get a list of installed packages."""
-    json_output = get_json_output()
-
-    return [pack["package"]["package_name"] for pack in json_output]
-
-
 def get_package_counter_dict() -> Dict[str, int]:
     """Get a dictionary of package usage counters."""
-    json_output = get_json_output()
-    return {item["package"]["package_name"]: 0 for item in json_output}
+    packages_ = get_current_packages()
+    return {package: 0 for package in packages_}
 
 
 def freeze_into_requirements():
@@ -68,4 +61,3 @@ def pre_cleanup_with_ruff(path_):
     Pre cleanup with ruff
     """
     execute_command_without_output(["ruff", "check", path_, "--fix"])
-

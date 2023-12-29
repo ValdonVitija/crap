@@ -5,27 +5,29 @@ from crap.file_analyzer import PythonFileAnalyzer
 from crap.virtual_env_checker import VirtualEnvChecker
 from crap.package_usage_counter import PackageUsageCounter
 from crap.subprocesses import (
-    get_installed_packages,
     uninstall_package,
     pre_cleanup_with_ruff,
     reinstall_from_requirements,
     freeze_into_requirements,
+    get_current_packages
 )
 
 
 class CrapManager:
-    __slots__ = ("path_", "venv_checker", "package_usage_counter")
+    __slots__ = ("path_", "venv_checker", "package_usage_counter", "deleted_packages")
 
     def __init__(self, path_: str):
         self.path_ = pathlib.Path(path_).absolute()
         self.venv_checker = VirtualEnvChecker()
         self.package_usage_counter = PackageUsageCounter()
-
+        self.deleted_packages = set()
+    
     def run(self):
         if not self.path_.exists():
             raise FileNotFoundError("File/Dir not found")
 
         self._process_path()
+        initial_packages = get_current_packages()
         self._cleanup_packages()
         # After we cleanup remove the unused packages, we need to freeze the current environment to requirements.txt.
         # The left packages in requirements.txt are the ones that are actually used by the project. These packages might have dependecies
@@ -33,6 +35,12 @@ class CrapManager:
         # When using pip to install packages, any dependecy gets installed automatically. So we don't need to worry about that.
         freeze_into_requirements()
         reinstall_from_requirements()
+
+        final_packages = get_current_packages()
+        self.deleted_packages = initial_packages - final_packages
+
+        self.print_deleted_packages()
+        
 
     def _process_path(self):
         if self.path_.is_file():
@@ -44,7 +52,7 @@ class CrapManager:
         pre_cleanup_with_ruff(file_path)
         analyzer = PythonFileAnalyzer(file_path)
         analyzer.analyze()
-        for package in get_installed_packages():
+        for package in get_current_packages():
             if package in analyzer.imported_modules:
                 self.package_usage_counter.increment_package_count(package)
 
@@ -84,8 +92,10 @@ class CrapManager:
         unused_packages = self.package_usage_counter.get_unused_packages(
             important_packages
         )
+
         for package in unused_packages:
             uninstall_package(package)
+            self.deleted_packages.add(package)
 
     @staticmethod
     def _get_important_packages() -> Set[str]:
@@ -103,6 +113,11 @@ class CrapManager:
             encoding="utf-8",
         ) as file:
             return {line.strip() for line in file}
+
+    def print_deleted_packages(self):
+        print("🗑️📦Deleted packages:")
+        for package in self.deleted_packages:
+            print(f" - {package}")
 
     @staticmethod
     def _get_excluded_dirs() -> Set[str]:
