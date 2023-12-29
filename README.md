@@ -41,31 +41,24 @@ Crap deletes redundant/unused python packages from virtual environments, and yea
 
 
 ### Step 1 
+Navigate to your project directory and activate your venv.
+
 ```bash
 (venv) root@user:~/my_app> crap project_dir
 ```
+>[!IMPORTANT]
+> Crap assumes you're a pro who knows that every python project deserves its own venv, therefore it cleans your currently activated venv.
 
+>[!NOTE]
+> You can also navigate to your projects root directory. Inside the repository directory and just:
+
+```bash
+(venv) root@user:~/my_app> crap
+
+```
 ### Step 2
 
 Oh... you're done. That was it. I mean, why should you even bother learning how to use crap? It's not like it's a complex tool or anything. It just does exactly what the name suggests. So, if you're really determined to waste your time, here's the next section for you.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # Detailed Explanations
