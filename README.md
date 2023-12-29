@@ -7,7 +7,7 @@
 
 # About
 
-Crap deletes redundant/unused python packages from virtual environments, and yeah it does that automatically without even executing your code.
+Crap deletes redundant/unused python packages from virtual environments, and yeah it does that automatically.
 
 # Installation
 
