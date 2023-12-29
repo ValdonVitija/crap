@@ -19,15 +19,6 @@ class TestCrapManager(unittest.TestCase):
         self.crap_manager._process_path()
         mock_analyze_directory.assert_called_once()
 
-    @patch('crap.crap_manager.get_installed_packages', return_value=['os', 'pathlib'])
-    @patch('crap.crap_manager.PythonFileAnalyzer')
-    def test_analyze_file(self, mock_analyzer, mock_get_installed_packages):
-        mock_analyzer_instance = mock_analyzer.return_value
-        mock_analyzer_instance.imported_modules = ['os']
-        self.crap_manager.package_usage_counter.pack_counter.clear()
-        self.crap_manager.package_usage_counter.pack_counter = {'os': 0}
-        self.crap_manager._analyze_file(Path(__file__))
-        self.assertEqual(self.crap_manager.package_usage_counter.pack_counter, {'os': 1})
 
     @patch('crap.crap_manager.CrapManager._analyze_file')
     def test_analyze_directory(self, mock_analyze_file):

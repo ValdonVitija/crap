@@ -1,5 +1,5 @@
 import unittest
-from crap.subprocesses import run_subprocess, execute_command_without_output, get_installed_packages
+from crap.subprocesses import run_subprocess, execute_command_without_output, get_current_packages
 
 class SubprocessesTests(unittest.TestCase):
     def test_run_subprocess(self):
@@ -13,8 +13,8 @@ class SubprocessesTests(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_get_installed_packages(self):
-        packages = get_installed_packages()
-        self.assertIsInstance(packages, list)
+        packages = get_current_packages()
+        self.assertIsInstance(packages, set)
 
 if __name__ == "__main__":
     unittest.main()
